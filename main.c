@@ -5,6 +5,7 @@
 #include <dirent.h>
 #include "image_processing.h"
 
+
 void generar_nombre_salida(const char* original, const char* sufijo, char* destino) {
     const char *nombre = strrchr(original, '/');
     nombre = (nombre) ? nombre + 1 : original;
@@ -20,12 +21,20 @@ void generar_nombre_salida(const char* original, const char* sufijo, char* desti
 int main() {
     DIR *dir;
     struct dirent *ent;
+    int kernel;
+
+    do{
+        printf("Ingrese el valor de kernel para el blur (de 55 a 155): ");
+        scanf("%d", &kernel);
+    } while(kernel < 55 || kernel > 155);
+    
 
     dir = opendir("images/");
     if (dir == NULL) {
         perror("No se pudo abrir el directorio 'imagenes'");
         return 1;
     }
+
 
     while ((ent = readdir(dir)) != NULL) {
         if (strstr(ent->d_name, ".bmp") != NULL) {
@@ -41,8 +50,8 @@ int main() {
             // Crear carpeta destino
             char carpeta_resultado[300];
             sprintf(carpeta_resultado, "results/%s", nombre_base);
-            crear_directorio_si_no_existe("results");
-            crear_directorio_si_no_existe(carpeta_resultado);
+            // crear_directorio_si_no_existe("results");
+            // crear_directorio_si_no_existe(carpeta_resultado);
 
             char out1[300], out2[300], out3[300], out4[300], out5[300];
 
@@ -58,16 +67,14 @@ int main() {
             grayscale_mirror_horizontal(ruta_entrada, out4);
             grayscale_mirror_vertical(ruta_entrada, out5);
 
-            for (int k = 55; k <= 155; k += 20) {
-                char salida[300], sufijo[20];
-                sprintf(sufijo, "blur%d", k);
-                generar_nombre_salida(ent->d_name, sufijo, salida);
-                blur_image(ruta_entrada, salida, k);
-                printf("Imagen procesada: %s -> %s\n", ent->d_name, salida);
-            }            
-            
+            char salida[300];
+            char sufijo_blur[64];
+            sprintf(sufijo_blur, "blur_%d", kernel);
+            generar_nombre_salida(ent->d_name, sufijo_blur, salida);
 
-            printf("Procesada imagen: %s\n", ent->d_name);
+            blur_image(ruta_entrada, salida, kernel);
+            printf("Imagen procesada: %s -> kernel de %d\n", ent->d_name, kernel);
+           
         }
     }
 
