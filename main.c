@@ -25,6 +25,17 @@ int main() {
     int kernel;
     int total = 0;
 
+    double inicio = omp_get_wtime();
+    FILE* reporte = fopen("results.txt", "w");
+    if(!reporte){
+        perror("No se pudo crear el archivo .txt de salida");
+        return 1;
+    }
+
+    int lecturas = 6;
+    int escrituras = 6;
+    int instrucciones = (lecturas + escrituras) * 20;
+
     do{
         printf("Ingrese el valor de kernel para el blur (de 55 a 155): ");
         scanf("%d", &kernel);
@@ -88,8 +99,26 @@ int main() {
 
              //printf("Imagen procesada: %s -> kernel de %d\n", namelist[i]->d_name, kernel);
             printf("Hilo %d terminado - Imagen procesada: %s\n", omp_get_thread_num(), nombre_archivo);
+
+            fprintf(reporte, "Imagen: %s -> Lecturas: %d, Escrituras: %d, Instrucciones: %d\n", nombre_archivo, lecturas, escrituras, instrucciones);
         
     }
+
+    double fin = omp_get_wtime();
+    double tiempo_total = fin - inicio;
+
+    int total_lecturas = total * 6;
+    int total_escrituras = total * 6;
+    int total_instrucciones = (total_lecturas + total_escrituras) * 20;
+
+    double MIPS = total_instrucciones / (1e6 * tiempo_total);
+
+    fprintf(reporte, "\nResumen general:\n");
+    fprintf(reporte, "Tiempo total de ejecución: %.4f segundos\n", tiempo_total);
+    fprintf(reporte, "Total de instrucciones: %d\n", total_instrucciones);
+    fprintf(reporte, "MIPS estimados: %.4f\n", MIPS);
+
+    fclose(reporte);
 
     //closedir(dir);
     printf("** PROCESAMIENTO TERMINADO. **\n");
