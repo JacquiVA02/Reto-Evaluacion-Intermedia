@@ -116,7 +116,7 @@ int main() {
     fprintf(reporte, "\nResumen general:\n");
     fprintf(reporte, "Tiempo total de ejecución: %.4f segundos\n", tiempo_total);
     fprintf(reporte, "Total de instrucciones: %d\n", total_instrucciones);
-    fprintf(reporte, "MIPS estimados: %.4f\n", MIPS);
+    fprintf(reporte, "MIPS estimados: %.10f\n", MIPS);
 
     fclose(reporte);
 

@@ -1,0 +1,7 @@
+Imagen: mario.bmp -> Lecturas: 6, Escrituras: 6, Instrucciones: 240
+Imagen: beach.bmp -> Lecturas: 6, Escrituras: 6, Instrucciones: 240
+
+Resumen general:
+Tiempo total de ejecución: 270.3680 segundos
+Total de instrucciones: 480
+MIPS estimados: 0.0000
